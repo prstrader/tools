@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Free Bonus Converter</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #070b11;
+      color: #f5f5f5;
+    }
+    h1 {
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+    .card {
+      max-width: 560px;
+      padding: 24px;
+      border-radius: 10px;
+      background: #111827;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+    .mode-selector {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #9ca3af;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 150ms ease;
+      font-size: 14px;
+    }
+    .mode-btn.active {
+      background: #38bdf8;
+      color: #020617;
+      border-color: #38bdf8;
+    }
+    label {
+      display: block;
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      border-radius: 6px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #f9fafb;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px #38bdf8;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      background: #38bdf8;
+      color: #020617;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0ea5e9;
+    }
+    .results {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #1f2937;
+      display: none;
+    }
+    .section {
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #6b7280;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 15px;
+    }
+    .label {
+      color: #9ca3af;
+    }
+    .value {
+      font-weight: 600;
+      color: #38bdf8;
+    }
+    .highlight {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .highlight-title {
+      font-size: 13px;
+      color: #86efac;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .highlight-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #22c55e;
+    }
+    .conversion-rate {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 8px;
+    }
+    .note {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 3px solid #38bdf8;
+      font-size: 13px;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+    .disclaimer {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 6px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-size: 11px;
+      color: #fca5a5;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Free Bonus Converter</h1>
+    <div class="subtitle">Convert sportsbook free bonus to real cash profit</div>
+
+    <label>Bonus Type</label>
+    <div class="mode-selector">
+      <button class="mode-btn active" onclick="setMode('returned')">Stake Returned</button>
+      <button class="mode-btn" onclick="setMode('not_returned')">Stake NOT Returned</button>
+    </div>
+
+    <label>
+      Your cash deposited ($)
+      <input id="cash" type="number" step="0.01" value="100" />
+    </label>
+
+    <label>
+      Free bonus amount ($)
+      <input id="bonus" type="number" step="0.01" value="110" />
+    </label>
+
+    <label>
+      Promo side odds (American, e.g. +220)
+      <input id="promoOdds" type="number" step="1" value="+130" />
+    </label>
+
+    <label>
+      Hedge side odds (American, e.g. -170)
+      <input id="hedgeOdds" type="number" step="1" value="-150" />
+    </label>
+
+    <button onclick="calculate()">Calculate Conversion</button>
+
+    <div class="results" id="results" style="display:none;">
+      
+      <div class="section">
+        <div class="section-title">Promo Side</div>
+        <div class="row">
+          <span class="label">Your stake (cash + bonus)</span>
+          <span class="value" id="promoStakeOut">$0.00</span>
+        </div>
+        <div class="row">
+          <span class="label">Collect if wins</span>
+          <span class="value" id="promoCollectOut">$0.00</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Hedge Side</div>
+        <div class="row">
+          <span class="label">Hedge stake needed</span>
+          <span class="value" id="hedgeStakeOut">$0.00</span>
+        </div>
+        <div class="row">
+          <span class="label">Collect if wins</span>
+          <span class="value" id="hedgeCollectOut">$0.00</span>
+        </div>
+      </div>
+
+      <div class="highlight">
+        <div class="highlight-title">💰 Your Cash Profit</div>
+        <div class="highlight-value" id="profitOut">$0.00</div>
+        <div class="conversion-rate">
+          Bonus converted: <strong id="conversionOut">0.0%</strong> of $<span id="bonusOut">0</span>
+        </div>
+      </div>
+
+      <div class="note" id="noteOut"></div>
+
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ Stake Returned: hedge sized to match promo collect. Stake NOT Returned: hedge sized for equal net profit. Always verify final odds before betting. Gambling involves risk. Use responsibly.
+    </div>
+  </div>
+
+  <script>
+    let mode = "returned";
+
+    function setMode(m) {
+      mode = m;
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function americanToDecimal(us) {
+      us = Number(us);
+      if (isNaN(us) || us === 0) return NaN;
+      return us > 0 ? 1 + us / 100 : 1 + 100 / Math.abs(us);
+    }
+
+    function calculate() {
+      const cash = Number(document.getElementById("cash").value);
+      const bonus = Number(document.getElementById("bonus").value);
+      const promoUS = Number(document.getElementById("promoOdds").value);
+      const hedgeUS = Number(document.getElementById("hedgeOdds").value);
+
+      const oPlus = americanToDecimal(promoUS);
+      const oMinus = americanToDecimal(hedgeUS);
+
+      if (!isFinite(cash) || !isFinite(bonus) || !isFinite(oPlus) || !isFinite(oMinus)) {
+        alert("Check inputs. All fields required, odds must be valid American odds.");
+        return;
+      }
+
+      if (cash <= 0 || bonus <= 0 || oPlus <= 1 || oMinus <= 1) {
+        alert("Cash, bonus, and odds must all be positive.");
+        return;
+      }
+
+      let promoStake, promoCollect, hedgeStake, hedgeCollect, yourProfit;
+
+      if (mode === "returned") {
+        // STAKE RETURNED: hedge sized to match promo collect
+        promoStake = cash + bonus;
+        promoCollect = promoStake * oPlus;
+        hedgeStake = promoCollect / oMinus;
+        hedgeCollect = hedgeStake * oMinus;
+        yourProfit = promoCollect - cash - hedgeStake;
+
+      } else {
+        // STAKE NOT RETURNED: hedge sized for equal net profit
+        promoStake = cash + bonus;
+        promoCollect = promoStake * (oPlus - 1);
+        hedgeStake = ((promoStake * (oPlus - 1)) + cash) / oMinus;
+        hedgeCollect = hedgeStake * oMinus;
+        yourProfit = promoCollect - hedgeStake;
+      }
+
+      const conversion = yourProfit / bonus;
+
+      document.getElementById("promoStakeOut").textContent = "$" + promoStake.toFixed(2);
+      document.getElementById("promoCollectOut").textContent = "$" + promoCollect.toFixed(2);
+      document.getElementById("hedgeStakeOut").textContent = "$" + hedgeStake.toFixed(2);
+      document.getElementById("hedgeCollectOut").textContent = "$" + hedgeCollect.toFixed(2);
+      document.getElementById("profitOut").textContent = "$" + yourProfit.toFixed(2);
+      document.getElementById("conversionOut").textContent = (conversion * 100).toFixed(1) + "%";
+      document.getElementById("bonusOut").textContent = bonus.toFixed(2);
+
+      let note = "";
+      if (conversion >= 0.85) note = "✓ Excellent conversion (85%+) - fire it";
+      else if (conversion >= 0.70) note = "✓ Good conversion (70-85%) - solid play";
+      else if (conversion >= 0.50) note = "⚠ Marginal (50-70%) - only if desperate for volume";
+      else note = "✗ Poor conversion (<50%) - pass and find better lines";
+
+      document.getElementById("noteOut").textContent = note;
+      document.getElementById("results").style.display = "block";
+    }
+  </script>
+</body>
+</html>
