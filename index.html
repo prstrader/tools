@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Bonus Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding: 24px 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .radio-option {
+            flex: 1;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .radio-option input:checked + label {
+            border-color: #667eea;
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .input-with-hint {
+            position: relative;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .hint {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-calculate {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 20px;
+            font-size: 15px;
+        }
+
+        .btn-calculate:active {
+            transform: scale(0.98);
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-reset:active {
+            background: #e0e0e0;
+        }
+
+        .btn-copy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .btn-copy:active {
+            background: #c8e6c9;
+        }
+
+        .results {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-section {
+            margin-bottom: 18px;
+        }
+
+        .result-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .result-item-label {
+            color: #555;
+        }
+
+        .result-item-value {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .profit-section {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 14px;
+            text-align: center;
+            border: 2px solid #4caf50;
+        }
+
+        .profit-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .profit-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .profit-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #4caf50;
+        }
+
+        .conversion-stat {
+            font-size: 12px;
+            color: #999;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px 14px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-calculate {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Free Bonus Converter</h1>
+        <p class="subtitle">Convert sportsbook free bonus to real cash profit</p>
+
+        <!-- Bonus Type Selection -->
+        <div class="section">
+            <div class="section-title">Bonus Type</div>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="stake-returned" name="bonusType" value="returned" checked>
+                    <label for="stake-returned">Stake Returned</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="stake-not-returned" name="bonusType" value="notReturned">
+                    <label for="stake-not-returned">Stake NOT Returned</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Fields -->
+        <div class="section">
+            <div class="form-group">
+                <label for="cashDeposit">Your cash deposited ($)</label>
+                <input type="number" id="cashDeposit" placeholder="0.00" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="bonusAmount">Free bonus amount ($)</label>
+                <input type="number" id="bonusAmount" placeholder="0.00" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="promoOdds">Promo side odds (American)</label>
+                <input type="text" id="promoOdds" placeholder="e.g. +220" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="hedgeOdds">Hedge side odds (American)</label>
+                <input type="text" id="hedgeOdds" placeholder="e.g. -170" value="">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button class="btn-reset" onclick="resetForm()">Reset</button>
+            <button class="btn-copy" onclick="copyResults()">Copy</button>
+            <button class="btn-calculate" onclick="calculate()">Calculate Conversion</button>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results">
+            <div class="result-section">
+                <div class="result-label">Promo Side</div>
+                <div class="result-item">
+                    <span class="result-item-label">Your stake (cash + bonus)</span>
+                    <span class="result-item-value" id="promoStake">$0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-item-label">Collect if wins</span>
+                    <span class="result-item-value" id="promoCollect">$0.00</span>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-label">Hedge Side</div>
+                <div class="result-item">
+                    <span class="result-item-label">Hedge stake needed</span>
+                    <span class="result-item-value" id="hedgeStake">$0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-item-label">Collect if wins</span>
+                    <span class="result-item-value" id="hedgeCollect">$0.00</span>
+                </div>
+            </div>
+
+            <div class="profit-section">
+                <div class="profit-emoji">💰</div>
+                <div class="profit-label">Your Cash Profit</div>
+                <div class="profit-value" id="cashProfit">$0.00</div>
+                <div class="conversion-stat">
+                    Bonus converted: <span id="conversionRate">0.0%</span> of $<span id="bonusDisplay">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function parseAmericanOdds(oddsStr) {
+            const odds = parseInt(oddsStr.replace('+', ''));
+            if (isNaN(odds)) return null;
+            
+            if (odds > 0) {
+                return (odds / 100) + 1;
+            } else {
+                return (100 / Math.abs(odds)) + 1;
+            }
+        }
+
+        function calculate() {
+            const bonusType = document.querySelector('input[name="bonusType"]:checked').value;
+            const cashDeposit = parseFloat(document.getElementById('cashDeposit').value) || 0;
+            const bonusAmount = parseFloat(document.getElementById('bonusAmount').value) || 0;
+            const promoOddsStr = document.getElementById('promoOdds').value;
+            const hedgeOddsStr = document.getElementById('hedgeOdds').value;
+
+            const promoMultiplier = parseAmericanOdds(promoOddsStr);
+            const hedgeMultiplier = parseAmericanOdds(hedgeOddsStr);
+
+            if (!promoMultiplier || !hedgeMultiplier) {
+                alert('Please enter valid American odds');
+                return;
+            }
+
+            let promoStake, hedgeStake, promoCollect, hedgeCollect, profit, conversionRate;
+
+            if (bonusType === 'returned') {
+                promoStake = cashDeposit + bonusAmount;
+                promoCollect = promoStake * promoMultiplier;
+                hedgeStake = promoCollect / hedgeMultiplier;
+                hedgeCollect = hedgeStake * (hedgeMultiplier - 1);
+                profit = (promoCollect - hedgeCollect) - cashDeposit;
+                conversionRate = bonusAmount > 0 ? (profit / bonusAmount) * 100 : 0;
+            } else {
+                promoStake = bonusAmount;
+                promoCollect = promoStake * promoMultiplier;
+                hedgeStake = (promoCollect - bonusAmount) / hedgeMultiplier;
+                hedgeCollect = hedgeStake * (hedgeMultiplier - 1);
+                profit = (promoCollect - hedgeCollect) - bonusAmount;
+                conversionRate = bonusAmount > 0 ? (profit / bonusAmount) * 100 : 0;
+            }
+
+            document.getElementById('promoStake').textContent = '$' + promoStake.toFixed(2);
+            document.getElementById('promoCollect').textContent = '$' + promoCollect.toFixed(2);
+            document.getElementById('hedgeStake').textContent = '$' + hedgeStake.toFixed(2);
+            document.getElementById('hedgeCollect').textContent = '$' + hedgeCollect.toFixed(2);
+            document.getElementById('cashProfit').textContent = '$' + Math.max(0, profit).toFixed(2);
+            document.getElementById('conversionRate').textContent = conversionRate.toFixed(1) + '%';
+            document.getElementById('bonusDisplay').textContent = bonusAmount.toFixed(0);
+        }
+
+        function resetForm() {
+            document.getElementById('cashDeposit').value = '';
+            document.getElementById('bonusAmount').value = '';
+            document.getElementById('promoOdds').value = '';
+            document.getElementById('hedgeOdds').value = '';
+            
+            document.getElementById('promoStake').textContent = '$0.00';
+            document.getElementById('promoCollect').textContent = '$0.00';
+            document.getElementById('hedgeStake').textContent = '$0.00';
+            document.getElementById('hedgeCollect').textContent = '$0.00';
+            document.getElementById('cashProfit').textContent = '$0.00';
+            document.getElementById('conversionRate').textContent = '0.0%';
+            document.getElementById('bonusDisplay').textContent = '0';
+        }
+
+        function copyResults() {
+            const promoStake = document.getElementById('promoStake').textContent;
+            const promoCollect = document.getElementById('promoCollect').textContent;
+            const hedgeStake = document.getElementById('hedgeStake').textContent;
+            const hedgeCollect = document.getElementById('hedgeCollect').textContent;
+            const cashProfit = document.getElementById('cashProfit').textContent;
+            const conversionRate = document.getElementById('conversionRate').textContent;
+
+            const text = `Free Bonus Conversion Results:\n\nPromo Side:\nStake: ${promoStake}\nCollect if wins: ${promoCollect}\n\nHedge Side:\nStake: ${hedgeStake}\nCollect if wins: ${hedgeCollect}\n\nCash Profit: ${cashProfit}\nConversion Rate: ${conversionRate}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Results copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy results');
+            });
+        }
+
+        // Allow Enter key to trigger calculation
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
